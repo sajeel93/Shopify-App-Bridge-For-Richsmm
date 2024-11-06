@@ -1,0 +1,32 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "add5acd07996a48717656ed7d4d290b1"
+name = "richsmm-two"
+handle = "richsmm-two"
+application_url = "https://pm-proposal-fellowship-characteristic.trycloudflare.com"
+embedded = true
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "write_products"
+
+[auth]
+redirect_urls = [
+  "https://pm-proposal-fellowship-characteristic.trycloudflare.com/auth/callback",
+  "https://pm-proposal-fellowship-characteristic.trycloudflare.com/auth/shopify/callback",
+  "https://pm-proposal-fellowship-characteristic.trycloudflare.com/api/auth/callback"
+]
+
+[webhooks]
+api_version = "2024-10"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/uninstalled" ]
+  uri = "/webhooks/app/uninstalled"
+
+[pos]
+embedded = false
+
+[build]
+dev_store_url = "highfivemart.myshopify.com"
+automatically_update_urls_on_dev = true
