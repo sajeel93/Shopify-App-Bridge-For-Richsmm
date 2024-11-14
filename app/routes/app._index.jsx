@@ -1,329 +1,162 @@
-import { useEffect } from "react";
-import { json } from "@remix-run/node";
-import { useFetcher } from "@remix-run/react";
-import {
-  Page,
-  Layout,
-  Text,
-  Card,
-  Button,
-  BlockStack,
-  Box,
-  List,
-  Link,
-  InlineStack,
-} from "@shopify/polaris";
-import { TitleBar, useAppBridge } from "@shopify/app-bridge-react";
-import { authenticate } from "../shopify.server";
+import polaris from "@shopify/polaris";
+import { useEffect, useState } from "react";
+import { TitleBar } from "@shopify/app-bridge-react";
+import { useActionData, redirect } from "@remix-run/react";
+import { Form } from "@remix-run/react";
 
-export const loader = async ({ request }) => {
-  await authenticate.admin(request);
+const { Page, Card, TextField, Button, Link, TextContainer } = polaris;
 
+// Loader is not needed for redirection after the action
+export const loader = async () => {
   return null;
 };
 
+// Action to handle the form submission
 export const action = async ({ request }) => {
-  const { admin } = await authenticate.admin(request);
-  const color = ["Red", "Orange", "Yellow", "Green"][
-    Math.floor(Math.random() * 4)
-  ];
-  const response = await admin.graphql(
-    `#graphql
-      mutation populateProduct($input: ProductInput!) {
-        productCreate(input: $input) {
-          product {
-            id
-            title
-            handle
-            status
-            variants(first: 10) {
-              edges {
-                node {
-                  id
-                  price
-                  barcode
-                  createdAt
-                }
-              }
-            }
-          }
-        }
-      }`,
-    {
-      variables: {
-        input: {
-          title: `${color} Snowboard`,
-        },
-      },
-    },
-  );
-  const responseJson = await response.json();
-  const product = responseJson.data.productCreate.product;
-  const variantId = product.variants.edges[0].node.id;
-  const variantResponse = await admin.graphql(
-    `#graphql
-    mutation shopifyRemixTemplateUpdateVariant($productId: ID!, $variants: [ProductVariantsBulkInput!]!) {
-      productVariantsBulkUpdate(productId: $productId, variants: $variants) {
-        productVariants {
-          id
-          price
-          barcode
-          createdAt
-        }
-      }
-    }`,
-    {
-      variables: {
-        productId: product.id,
-        variants: [{ id: variantId, price: "100.00" }],
-      },
-    },
-  );
-  const variantResponseJson = await variantResponse.json();
+  const formData = await request.formData();
+  const apiKey = formData.get("apiKey");
 
-  return json({
-    product: responseJson.data.productCreate.product,
-    variant: variantResponseJson.data.productVariantsBulkUpdate.productVariants,
-  });
+  if (!apiKey || !/^[a-f0-9]{32}$/.test(apiKey)) {
+    return {
+      errorMessage: "Invalid API key. Must be 32 characters in hex format.",
+    };
+  }
+
+  try {
+    const requestData = new URLSearchParams();
+    requestData.append("key", apiKey);
+    requestData.append("action", "balance");
+
+    const response = await fetch("https://richsmm.com/api/v2", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: requestData.toString(),
+    });
+
+    console.log(response, "response");
+    const result = await response.json();
+
+    console.log(result, "result");
+
+    if (!response.ok) {
+      throw new Error(result.error || "Failed to fetch API balance");
+    }
+
+    // If the API is connected, redirect to the dashboard
+    if (result.balance && response.status === 200) {
+      // You can set up a session, save data, or perform other actions here
+      return redirect("/app/dashboard"); // Redirect to the dashboard
+    }
+
+    // Otherwise, return the successMessage
+    return {
+      successMessage: result.error ? result.error : "connected",
+      apiKey,
+    };
+  } catch (error) {
+    return { errorMessage: error.message };
+  }
 };
 
-export default function Index() {
-  const fetcher = useFetcher();
-  const shopify = useAppBridge();
-  const isLoading =
-    ["loading", "submitting"].includes(fetcher.state) &&
-    fetcher.formMethod === "POST";
-  const productId = fetcher.data?.product?.id.replace(
-    "gid://shopify/Product/",
-    "",
+export default function ApiSetup() {
+  const actionData = useActionData();
+  const [apiKey, setApiKey] = useState("");
+  const [errorMessage, setErrorMessage] = useState(
+    actionData?.errorMessage || "",
   );
 
   useEffect(() => {
-    if (productId) {
-      shopify.toast.show("Product created");
+    if (apiKey && !/^[a-f0-9]{32}$/.test(apiKey)) {
+      setErrorMessage(
+        "Invalid API key. The key must be 32 characters long and contain only letters (a-f) and numbers.",
+      );
+    } else {
+      setErrorMessage(""); // Clear error message if the key is valid
     }
-  }, [productId, shopify]);
-  const generateProduct = () => fetcher.submit({}, { method: "POST" });
+  }, [apiKey]);
 
   return (
     <Page>
-      <TitleBar title="Remix app template">
-        <button variant="primary" onClick={generateProduct}>
-          Generate a product
-        </button>
-      </TitleBar>
-      <BlockStack gap="500">
-        <Layout>
-          <Layout.Section>
-            <Card>
-              <BlockStack gap="500">
-                <BlockStack gap="200">
-                  <Text as="h2" variant="headingMd">
-                    Congrats on creating a new Shopify app 🎉
-                  </Text>
-                  <Text variant="bodyMd" as="p">
-                    This embedded app template uses{" "}
-                    <Link
-                      url="https://shopify.dev/docs/apps/tools/app-bridge"
-                      target="_blank"
-                      removeUnderline
-                    >
-                      App Bridge
-                    </Link>{" "}
-                    interface examples like an{" "}
-                    <Link url="/app/additional" removeUnderline>
-                      additional page in the app nav
-                    </Link>
-                    , as well as an{" "}
-                    <Link
-                      url="https://shopify.dev/docs/api/admin-graphql"
-                      target="_blank"
-                      removeUnderline
-                    >
-                      Admin GraphQL
-                    </Link>{" "}
-                    mutation demo, to provide a starting point for app
-                    development.
-                  </Text>
-                </BlockStack>
-                <BlockStack gap="200">
-                  <Text as="h3" variant="headingMd">
-                    Get started with products
-                  </Text>
-                  <Text as="p" variant="bodyMd">
-                    Generate a product with GraphQL and get the JSON output for
-                    that product. Learn more about the{" "}
-                    <Link
-                      url="https://shopify.dev/docs/api/admin-graphql/latest/mutations/productCreate"
-                      target="_blank"
-                      removeUnderline
-                    >
-                      productCreate
-                    </Link>{" "}
-                    mutation in our API references.
-                  </Text>
-                </BlockStack>
-                <InlineStack gap="300">
-                  <Button loading={isLoading} onClick={generateProduct}>
-                    Generate a product
-                  </Button>
-                  {fetcher.data?.product && (
-                    <Button
-                      url={`shopify:admin/products/${productId}`}
-                      target="_blank"
-                      variant="plain"
-                    >
-                      View product
-                    </Button>
-                  )}
-                </InlineStack>
-                {fetcher.data?.product && (
-                  <>
-                    <Text as="h3" variant="headingMd">
-                      {" "}
-                      productCreate mutation
-                    </Text>
-                    <Box
-                      padding="400"
-                      background="bg-surface-active"
-                      borderWidth="025"
-                      borderRadius="200"
-                      borderColor="border"
-                      overflowX="scroll"
-                    >
-                      <pre style={{ margin: 0 }}>
-                        <code>
-                          {JSON.stringify(fetcher.data.product, null, 2)}
-                        </code>
-                      </pre>
-                    </Box>
-                    <Text as="h3" variant="headingMd">
-                      {" "}
-                      productVariantsBulkUpdate mutation
-                    </Text>
-                    <Box
-                      padding="400"
-                      background="bg-surface-active"
-                      borderWidth="025"
-                      borderRadius="200"
-                      borderColor="border"
-                      overflowX="scroll"
-                    >
-                      <pre style={{ margin: 0 }}>
-                        <code>
-                          {JSON.stringify(fetcher.data.variant, null, 2)}
-                        </code>
-                      </pre>
-                    </Box>
-                  </>
-                )}
-              </BlockStack>
-            </Card>
-          </Layout.Section>
-          <Layout.Section variant="oneThird">
-            <BlockStack gap="500">
-              <Card>
-                <BlockStack gap="200">
-                  <Text as="h2" variant="headingMd">
-                    App template specs
-                  </Text>
-                  <BlockStack gap="200">
-                    <InlineStack align="space-between">
-                      <Text as="span" variant="bodyMd">
-                        Framework
-                      </Text>
-                      <Link
-                        url="https://remix.run"
-                        target="_blank"
-                        removeUnderline
-                      >
-                        Remix
-                      </Link>
-                    </InlineStack>
-                    <InlineStack align="space-between">
-                      <Text as="span" variant="bodyMd">
-                        Database
-                      </Text>
-                      <Link
-                        url="https://www.prisma.io/"
-                        target="_blank"
-                        removeUnderline
-                      >
-                        Prisma
-                      </Link>
-                    </InlineStack>
-                    <InlineStack align="space-between">
-                      <Text as="span" variant="bodyMd">
-                        Interface
-                      </Text>
-                      <span>
-                        <Link
-                          url="https://polaris.shopify.com"
-                          target="_blank"
-                          removeUnderline
-                        >
-                          Polaris
-                        </Link>
-                        {", "}
-                        <Link
-                          url="https://shopify.dev/docs/apps/tools/app-bridge"
-                          target="_blank"
-                          removeUnderline
-                        >
-                          App Bridge
-                        </Link>
-                      </span>
-                    </InlineStack>
-                    <InlineStack align="space-between">
-                      <Text as="span" variant="bodyMd">
-                        API
-                      </Text>
-                      <Link
-                        url="https://shopify.dev/docs/api/admin-graphql"
-                        target="_blank"
-                        removeUnderline
-                      >
-                        GraphQL API
-                      </Link>
-                    </InlineStack>
-                  </BlockStack>
-                </BlockStack>
-              </Card>
-              <Card>
-                <BlockStack gap="200">
-                  <Text as="h2" variant="headingMd">
-                    Next steps
-                  </Text>
-                  <List>
-                    <List.Item>
-                      Build an{" "}
-                      <Link
-                        url="https://shopify.dev/docs/apps/getting-started/build-app-example"
-                        target="_blank"
-                        removeUnderline
-                      >
-                        {" "}
-                        example app
-                      </Link>{" "}
-                      to get started
-                    </List.Item>
-                    <List.Item>
-                      Explore Shopify’s API with{" "}
-                      <Link
-                        url="https://shopify.dev/docs/apps/tools/graphiql-admin-api"
-                        target="_blank"
-                        removeUnderline
-                      >
-                        GraphiQL
-                      </Link>
-                    </List.Item>
-                  </List>
-                </BlockStack>
-              </Card>
-            </BlockStack>
-          </Layout.Section>
-        </Layout>
-      </BlockStack>
+      <TitleBar title="API Setup" />
+      <div style={{ width: "60%", borderRadius: "10px" }}>
+        <Card sectioned>
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "16px" }}
+          >
+            <TextContainer>
+              <h1>API Setup</h1>
+              <h5>Website</h5>
+              <Link target="_blank" url="https://richsmm.com">
+                Richsmm.com
+              </Link>
+            </TextContainer>
+
+            <Form method="post">
+              <TextField
+                label="Enter API key"
+                placeholder="e.g. 9bdec003037ce39b4f9336afdd3a931a"
+                name="apiKey" // The name attribute will send this value in the form data
+                value={apiKey}
+                onChange={(value) => setApiKey(value)}
+                autoComplete="off"
+                error={errorMessage !== ""} // Display error style if there's an error
+              />
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  gap: "10px",
+                  marginTop: 10,
+                }}
+              >
+                <button
+                  style={{
+                    backgroundColor: "#007bff",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: 6,
+                    padding: "0.8rem",
+                    fontSize: "1rem",
+                    cursor: "pointer",
+                    width: "100%",
+                    fontWeight: "500",
+                  }}
+                  type="submit" // Triggers the form submission
+                >
+                  Connect API key
+                </button>
+                <Button
+                  fullWidth
+                  external
+                  blue
+                  target={"_blank"}
+                  url="https://richsmm.com/account"
+                >
+                  View API key
+                </Button>
+              </div>
+            </Form>
+
+            {errorMessage && (
+              <TextContainer>
+                <p style={{ textAlign: "center", color: "red" }}>
+                  {errorMessage}
+                </p>
+              </TextContainer>
+            )}
+
+            {actionData?.successMessage && (
+              <TextContainer>
+                <p style={{ textAlign: "center", color: "green" }}>
+                  {actionData.successMessage}
+                </p>
+              </TextContainer>
+            )}
+          </div>
+        </Card>
+      </div>
     </Page>
   );
 }
