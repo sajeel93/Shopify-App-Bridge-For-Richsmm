@@ -3,18 +3,18 @@
 client_id = "add5acd07996a48717656ed7d4d290b1"
 name = "richsmm-two"
 handle = "richsmm-two"
-application_url = "https://pm-proposal-fellowship-characteristic.trycloudflare.com"
+application_url = "https://enhancements-seat-sets-gothic.trycloudflare.com"
 embedded = true
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "write_products"
+scopes = "write_products,read_customers,read_orders,read_products,write_orders"
 
 [auth]
 redirect_urls = [
-  "https://pm-proposal-fellowship-characteristic.trycloudflare.com/auth/callback",
-  "https://pm-proposal-fellowship-characteristic.trycloudflare.com/auth/shopify/callback",
-  "https://pm-proposal-fellowship-characteristic.trycloudflare.com/api/auth/callback"
+  "https://enhancements-seat-sets-gothic.trycloudflare.com/auth/callback",
+  "https://enhancements-seat-sets-gothic.trycloudflare.com/auth/shopify/callback",
+  "https://enhancements-seat-sets-gothic.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
