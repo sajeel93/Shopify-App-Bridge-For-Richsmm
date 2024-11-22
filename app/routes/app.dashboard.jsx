@@ -4,11 +4,15 @@ import { useState } from "react";
 import { useLoaderData } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import { authenticate } from "../shopify.server";
+import fs from "fs";
+import path from "path";
+
+const filePath = await path.join(process.cwd(), "apiKey.txt");
+const apiKey_user = await fs.readFileSync(filePath, "utf-8");
 
 export const loader = async ({ request }) => {
   try {
     const { admin } = await authenticate.admin(request);
-
     // Shopify GraphQL API call
     const orderResponse = await admin.graphql(
       `#graphql
@@ -41,7 +45,7 @@ export const loader = async ({ request }) => {
 
     // External API call
     const formData = new URLSearchParams();
-    formData.append("key", "9bdec003037ce39b4f9336afdd3a931a");
+    formData.append("key", apiKey_user ? apiKey_user : "");
     formData.append("action", "balance");
 
     const response = await fetch("https://richsmm.com/api/v2", {
@@ -221,7 +225,7 @@ function Statistics({ stats, totalOrders, totalSales, richsmmData }) {
           }}
         >
           <p>
-            <strong>API Key:</strong> 9bdec003037ce39b4f9336afdd3a931a
+            <strong>API Key:</strong> {apiKey_user ? apiKey_user : ""}
           </p>
           <Button destructive>Delete</Button>
         </div>

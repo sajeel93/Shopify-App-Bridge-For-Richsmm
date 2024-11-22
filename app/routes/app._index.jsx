@@ -1,10 +1,11 @@
-import polaris from "@shopify/polaris";
+import { Page, Card, TextField, Button, TextContainer } from "@shopify/polaris";
 import { useEffect, useState } from "react";
 import { TitleBar } from "@shopify/app-bridge-react";
-import { useActionData, redirect } from "@remix-run/react";
-import { Form } from "@remix-run/react";
-
-const { Page, Card, TextField, Button, Link, TextContainer } = polaris;
+import { useActionData } from "@remix-run/react";
+import { Form, Link } from "@remix-run/react";
+import fs from "fs";
+import path from "path";
+import { redirect } from "@remix-run/node";
 
 // Loader is not needed for redirection after the action
 export const loader = async () => {
@@ -35,27 +36,23 @@ export const action = async ({ request }) => {
       body: requestData.toString(),
     });
 
-    console.log(response, "response");
     const result = await response.json();
-
-    console.log(result, "result");
 
     if (!response.ok) {
       throw new Error(result.error || "Failed to fetch API balance");
     }
 
-    // If the API is connected, redirect to the dashboard
-    if (result.balance && response.status === 200) {
-      // You can set up a session, save data, or perform other actions here
-      return redirect("/app/dashboard"); // Redirect to the dashboard
-    }
+    // Check for success status
+    if (response.status === 200 && result?.balance) {
+      const filePath = path.join(process.cwd(), "apiKey.txt");
+      fs.writeFileSync(filePath, apiKey, "utf-8");
 
-    // Otherwise, return the successMessage
-    return {
-      successMessage: result.error ? result.error : "connected",
-      apiKey,
-    };
+      return { successMessage: "API key saved successfully!" }; // This will trigger the success message
+    } else {
+      return { errorMessage: result?.error };
+    }
   } catch (error) {
+    console.log("Error:", error.message);
     return { errorMessage: error.message };
   }
 };
@@ -77,6 +74,12 @@ export default function ApiSetup() {
     }
   }, [apiKey]);
 
+  const redirectHandler = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    console.log("Redirecting to dashboard...");
+    window.location.href = window.location.origin + "/dashboard";
+  };
   return (
     <Page>
       <TitleBar title="API Setup" />
@@ -152,6 +155,15 @@ export default function ApiSetup() {
                 <p style={{ textAlign: "center", color: "green" }}>
                   {actionData.successMessage}
                 </p>
+                <Button
+                  fullWidth
+                  external
+                  blue
+                  target={"_blank"}
+                  url="https://admin.shopify.com/apps/richsmm-two/app/dashboard"
+                >
+                  Go to Dashboard
+                </Button>
               </TextContainer>
             )}
           </div>
