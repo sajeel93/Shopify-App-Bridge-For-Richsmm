@@ -3,7 +3,7 @@
 client_id = "a64a9239b520747b31153c391324030a"
 name = "Richsmm"
 handle = "Rich_smm"
-application_url = "https://richsmm-app-9ae9f88dd6e1.herokuapp.com"
+application_url = "https://skip-stem-rankings-citations.trycloudflare.com"
 embedded = true
 
 [access_scopes]
@@ -12,9 +12,9 @@ scopes = "write_products,read_customers,read_orders,read_products,write_orders"
 
 [auth]
 redirect_urls = [
-  "https://richsmm-app-9ae9f88dd6e1.herokuapp.com/auth/callback",
-  "https://richsmm-app-9ae9f88dd6e1.herokuapp.com/auth/shopify/callback",
-  "https://richsmm-app-9ae9f88dd6e1.herokuapp.com/api/auth/callback"
+  "https://skip-stem-rankings-citations.trycloudflare.com/auth/callback",
+  "https://skip-stem-rankings-citations.trycloudflare.com/auth/shopify/callback",
+  "https://skip-stem-rankings-citations.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
