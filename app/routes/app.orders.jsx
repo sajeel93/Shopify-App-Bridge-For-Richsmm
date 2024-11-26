@@ -55,7 +55,7 @@ export const loader = async ({ request }) => {
 
     // Combine API results and return as loader data
     return json({
-      orders: orderData.data.orders.edges,
+      orders: orderData?.data.orders.edges,
       totalOrders,
       totalSalesCost,
     });
@@ -75,13 +75,13 @@ export default function Orders() {
     if (status === "today") {
       // Filter based on today's date
       const today = new Date().toLocaleDateString();
-      return orders.filter(
+      return orders?.filter(
         (order) =>
           new Date(order.node.createdAt).toLocaleDateString() === today,
       ).length;
     }
 
-    return orders.filter((order) => {
+    return orders?.filter((order) => {
       switch (status) {
         case "all":
           return true;

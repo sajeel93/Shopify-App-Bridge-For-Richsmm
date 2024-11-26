@@ -3,14 +3,8 @@ import { useEffect, useState } from "react";
 import { TitleBar } from "@shopify/app-bridge-react";
 import { useActionData } from "@remix-run/react";
 import { Form, Link } from "@remix-run/react";
-import fs from "fs";
-import path from "path";
-import { redirect } from "@remix-run/node";
-
-// Loader is not needed for redirection after the action
-export const loader = async () => {
-  return null;
-};
+import Cookies from "js-cookie";
+import { useNavigate } from "@remix-run/react";
 
 // Action to handle the form submission
 export const action = async ({ request }) => {
@@ -44,10 +38,7 @@ export const action = async ({ request }) => {
 
     // Check for success status
     if (response.status === 200 && result?.balance) {
-      const filePath = path.join(process.cwd(), "apiKey.txt");
-      fs.writeFileSync(filePath, apiKey, "utf-8");
-
-      return { successMessage: "API key saved successfully!" }; // This will trigger the success message
+      return { successMessage: "API Key Connected successfully!", apiKey };
     } else {
       return { errorMessage: result?.error };
     }
@@ -61,33 +52,37 @@ export default function ApiSetup() {
   const actionData = useActionData();
   const [apiKey, setApiKey] = useState("");
   const [errorMessage, setErrorMessage] = useState(
-    actionData?.errorMessage || "",
+    actionData?.errorMessage || ""
   );
+  const navigate = useNavigate(); 
+
+  useEffect(() => {
+    if (actionData?.apiKey) {
+      
+      
+      // Store the API key in cookies or localStorage upon successful action
+      Cookies.set("apiKey", actionData?.apiKey); // Store for 7 days
+      localStorage.setItem("apiKey", actionData?.apiKey);
+      navigate("dashboard");
+    }
+  }, [actionData?.apiKey]);
 
   useEffect(() => {
     if (apiKey && !/^[a-f0-9]{32}$/.test(apiKey)) {
       setErrorMessage(
-        "Invalid API key. The key must be 32 characters long and contain only letters (a-f) and numbers.",
+        "Invalid API key. The key must be 32 characters long and contain only letters (a-f) and numbers."
       );
     } else {
       setErrorMessage(""); // Clear error message if the key is valid
     }
   }, [apiKey]);
 
-  const redirectHandler = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    console.log("Redirecting to dashboard...");
-    window.location.href = window.location.origin + "/dashboard";
-  };
   return (
     <Page>
       <TitleBar title="API Setup" />
       <div style={{ width: "60%", borderRadius: "10px" }}>
         <Card sectioned>
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "16px" }}
-          >
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             <TextContainer>
               <h1>API Setup</h1>
               <h5>Website</h5>

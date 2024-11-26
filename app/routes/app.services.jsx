@@ -109,15 +109,15 @@ export default function Services() {
     };
 
     return [
-      shopifyProduct.title || "No Product", // First column: Shopify product name
-      shopifyVariant.price || "No Price", // Second column: Shopify product price
+      shopifyProduct.title || "", // First column: Shopify product name
+      shopifyVariant.price || "", // Second column: Shopify product price
       service.id, // Third column: Service ID
       service.name, // Fourth column: Service Name
       <span>
         {service.min} - {service.max}
       </span>, // Fifth column: Quantity (min-max)
       service.rate, // Sixth column: Rate/Cost
-      service.duration, // Seventh column: Duration
+      shopifyVariant.price > service.rate ? shopifyVariant.price - service.rate : "", // Seventh column: Duration
     ];
   });
 

@@ -1,9 +1,9 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-client_id = "add5acd07996a48717656ed7d4d290b1"
-name = "richsmm-two"
-handle = "richsmm-two"
-application_url = "https://considerable-pop-publisher-donna.trycloudflare.com"
+client_id = "a64a9239b520747b31153c391324030a"
+name = "Richsmm"
+handle = "Rich_smm"
+application_url = "https://interior-thereof-afghanistan-administration.trycloudflare.com"
 embedded = true
 
 [access_scopes]
@@ -12,9 +12,9 @@ scopes = "write_products,read_customers,read_orders,read_products,write_orders"
 
 [auth]
 redirect_urls = [
-  "https://considerable-pop-publisher-donna.trycloudflare.com/auth/callback",
-  "https://considerable-pop-publisher-donna.trycloudflare.com/auth/shopify/callback",
-  "https://considerable-pop-publisher-donna.trycloudflare.com/api/auth/callback"
+  "https://interior-thereof-afghanistan-administration.trycloudflare.com/auth/callback",
+  "https://interior-thereof-afghanistan-administration.trycloudflare.com/auth/shopify/callback",
+  "https://interior-thereof-afghanistan-administration.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
@@ -28,5 +28,5 @@ api_version = "2024-10"
 embedded = false
 
 [build]
-dev_store_url = "highfivemart.myshopify.com"
+dev_store_url = "smmstoretest.myshopify.com"
 automatically_update_urls_on_dev = true
