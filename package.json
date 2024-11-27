@@ -40,9 +40,7 @@
     "prisma": "^5.11.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "vite-tsconfig-paths": "^5.0.1"
-  },
-  "devDependencies": {
+    "vite-tsconfig-paths": "^5.0.1",
     "@remix-run/eslint-config": "^2.7.1",
     "@shopify/api-codegen-preset": "^1.1.1",
     "@types/eslint": "^8.40.0",
