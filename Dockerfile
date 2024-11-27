@@ -19,4 +19,4 @@ RUN npm run build
 
 CMD ["npm", "run", "docker-start"]
 
-RUN npm run dev
+RUN npm run start
