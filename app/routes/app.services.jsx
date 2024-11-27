@@ -4,7 +4,6 @@ import {
   DataTable,
   TextField,
   Button,
-  Pagination,
   Select,
 } from "@shopify/polaris";
 import { useState } from "react";
