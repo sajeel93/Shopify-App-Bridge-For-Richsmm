@@ -24,7 +24,7 @@
     "node": "^18.20 || ^20.10 || >=21.0.0"
   },
   "dependencies": {
-    "@prisma/client": "^5.11.0",
+    "@prisma/client": "^5.22.0",
     "@remix-run/dev": "^2.7.1",
     "@remix-run/eslint-config": "^2.7.1",
     "@remix-run/node": "^2.7.1",
@@ -47,6 +47,8 @@
     "isbot": "^5.1.0",
     "js-cookie": "^3.0.5",
     "npm": "^10.8.2",
+    "pg": "^8.13.1",
+    "pgloader": "^1.1.6",
     "prettier": "^3.2.4",
     "prisma": "^5.11.0",
     "react": "^18.2.0",
