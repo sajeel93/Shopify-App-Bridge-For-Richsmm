@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "a64a9239b520747b31153c391324030a"
-application_url = "https://shopify-app-bridge-for-richsmm.fly.dev"
+application_url = "https://aus-ds-philips-fellow.trycloudflare.com"
 embedded = true
 name = "Richsmm"
 handle = "rich_smm"
@@ -24,9 +24,9 @@ scopes = "read_customers,read_orders,read_products,write_orders,write_products"
 
 [auth]
 redirect_urls = [
-  "https://shopify-app-bridge-for-richsmm.fly.dev/auth/callback",
-  "https://shopify-app-bridge-for-richsmm.fly.dev/auth/shopify/callback",
-  "https://shopify-app-bridge-for-richsmm.fly.dev/api/auth/callback"
+  "https://aus-ds-philips-fellow.trycloudflare.com/auth/callback",
+  "https://aus-ds-philips-fellow.trycloudflare.com/auth/shopify/callback",
+  "https://aus-ds-philips-fellow.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]

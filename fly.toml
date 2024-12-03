@@ -18,7 +18,7 @@ primary_region = 'syd'
 
  SCOPES = "write_products,read_customers,read_orders,read_products,write_orders"
 
- DATABASE_URL="postgresql://neondb_owner:ch4FqK6lgIGN@ep-white-morning-a269lwcq.eu-central-1.aws.neon.tech/neondb?sslmode=require"
+ DATABASE_URL="postgresql://neondb_owner:Hyec1kK9idtC@ep-broad-mud-a5sazf25.us-east-2.aws.neon.tech/neondb?sslmode=require"
 
 [http_service]
   internal_port = 3000
