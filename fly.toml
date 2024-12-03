@@ -1,0 +1,34 @@
+# fly.toml app configuration file generated for shopify-app-bridge-for-richsmm on 2024-12-03T12:49:56+05:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'shopify-app-bridge-for-richsmm'
+primary_region = 'syd'
+
+[build]
+
+[env] 
+
+ PORT = "3000"
+
+ SHOPIFY_APP_URL = "https://shopify-app-bridge-for-richsmm.fly.dev"
+
+ SHOPIFY_API_KEY = "a64a9239b520747b31153c391324030a"
+
+ SCOPES = "write_products,read_customers,read_orders,read_products,write_orders"
+
+ DATABASE_URL="postgresql://neondb_owner:ch4FqK6lgIGN@ep-white-morning-a269lwcq.eu-central-1.aws.neon.tech/neondb?sslmode=require"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
