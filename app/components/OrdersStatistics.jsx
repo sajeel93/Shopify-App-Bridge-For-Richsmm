@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const OrdersStatistics = ({ totalOrders, totalSales, stats,richsmmData }) => {
+const OrdersStatistics = ({ totalOrders, totalSales, stats, totalCosts }) => {
 
   const getTotalSales = (orders) => {
     return orders.reduce((total, order) => {
@@ -10,7 +10,6 @@ const OrdersStatistics = ({ totalOrders, totalSales, stats,richsmmData }) => {
   };
 
   const totalOrdersPrice = stats?.length ? getTotalSales(stats) : 0;
-  
 
   return (
     <div style={{ display: "flex", gap: "32px", marginBottom: "20px" }}>
@@ -22,10 +21,10 @@ const OrdersStatistics = ({ totalOrders, totalSales, stats,richsmmData }) => {
         <strong>Orders:</strong> {stats?.length}
       </p> 
       <p>
-        <strong>Costs:</strong> ${richsmmData?.balance || "0.00"}
+        <strong>Costs:</strong> ${parseFloat(totalCosts || "0.00").toFixed(2)}
       </p>
       <p>
-        <strong>Profit:</strong> ${totalOrdersPrice > richsmmData?.balance && totalOrdersPrice - richsmmData?.balance || "0.00"}
+        <strong>Profit:</strong> ${(totalCosts - totalOrdersPrice).toFixed(2)}
       </p>
       </>
       :
@@ -37,10 +36,10 @@ const OrdersStatistics = ({ totalOrders, totalSales, stats,richsmmData }) => {
         <strong>Orders:</strong> {totalOrders}
       </p>
       <p>
-        <strong>Costs:</strong> ${richsmmData?.balance || "0.00"}
+        <strong>Costs:</strong> ${parseFloat(totalCosts || "0.00").toFixed(2)}
       </p>
       <p>
-        <strong>Profit:</strong> ${totalSales > richsmmData?.balance && totalSales - richsmmData?.balance || "0.00"}
+        <strong>Profit:</strong> ${(totalCosts - totalSales).toFixed(2)}
       </p>
       </>
 }

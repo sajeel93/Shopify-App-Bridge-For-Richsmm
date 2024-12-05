@@ -5,6 +5,7 @@ import { useLoaderData } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import { authenticate } from "../shopify.server";
 import Cookies from "js-cookie";
+import { useNavigate } from "@remix-run/react";
 
 
 // Utility function to calculate date ranges
@@ -63,6 +64,19 @@ export const loader = async ({ request }) => {
                   amount
                 }
               }
+              lineItems(first: 10) {
+                edges {
+                  node {
+                    title
+                    variant {
+                      id
+                      price
+                      compareAtPrice
+                    }
+                    quantity
+                  }
+                }
+              }
             }
           }
         }
@@ -78,7 +92,16 @@ export const loader = async ({ request }) => {
 
     const totalSalesCost = totalSales.toFixed(2);
 
-    return json({ orderData, totalOrders, totalSalesCost });
+    const totalCosts = orderData.data.orders.edges.reduce((total, order) => {
+      const orderCost = order.node.lineItems.edges.reduce((lineItemTotal, lineItem) => {
+        const cost = parseFloat(lineItem.node.variant.compareAtPrice || 0);
+        const quantity = parseInt(lineItem.node.quantity, 10);
+        return lineItemTotal + cost * quantity;
+      }, 0);
+      return total + orderCost;
+    }, 0);
+    
+    return json({ orderData, totalOrders, totalSalesCost,totalCosts });
   } catch (error) {
     console.error("Loader error: ", error);
     return { error: "Failed to load orders", details: error.message };
@@ -91,8 +114,9 @@ export default function DashboardPage() {
   const [apiKey_user, setApiKey_user] = useState("");
   const [richsmmData, setRichsmmData] = useState("");
   const [stats, setStats] = useState(products);
+  const navigate = useNavigate();
 
-  const { orderData, totalOrders, totalSalesCost } = useLoaderData();
+  const { orderData, totalOrders, totalSalesCost, totalCosts } = useLoaderData();
 
   const tabs = [
     { id: "today", content: "Today" },
@@ -115,8 +139,6 @@ export default function DashboardPage() {
       const createdAt = new Date(order.node.createdAt);
       return createdAt >= new Date(start) && createdAt <= new Date(end);
     });
-
-    console.log(filteredOrders, "filteredOrders");
     
 
     // Update the stats with the filtered orders
@@ -124,8 +146,7 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
-    const storedApiKey = localStorage.getItem("apiKey");;
-    console.log(storedApiKey, "storedApiKey");
+    const storedApiKey = localStorage.getItem("apiKey");
 
     if (storedApiKey) {
       setApiKey_user(storedApiKey)
@@ -178,6 +199,8 @@ export default function DashboardPage() {
             totalSales={totalSalesCost}
             richsmmData={richsmmData}
             apiKey_user={apiKey_user}
+            totalCosts={totalCosts}
+            navigate={navigate}
           />
         </div>
       </Card>
@@ -206,19 +229,24 @@ export default function DashboardPage() {
 
         .tab-button:hover {
           background-color: #f0f0f0;
+          border-radius: 30px;
         }
 
         .active-tab {
           background-color: #007bff;
           color: white;
-          border-radius: 4px;
+          border-radius: 30px;
+        }
+
+        .active-tab:hover {
+          background-color: #007bff;
         }
 
         .status-button {
           background-color: #007bff;
           color: white;
           border: none;
-          border-radius: 8px;
+          border-radius: 30px;
           padding: 6px 12px;
           font-size: 14px;
           cursor: default;
@@ -227,16 +255,47 @@ export default function DashboardPage() {
         .status-button.success {
           background-color: #007bff;
         }
+
+        .funds-button {
+          background-color: #eee;
+          color: black;
+          border: 1px solid rgb(217 214 214);
+          border-radius: 30px;
+          padding: 6px 12px;
+          font-size: 14px;
+          cursor: pointer;
+          
+        }
+        
+        .delete-button {
+          background-color: red;
+          color: white;
+          border: 1px solid rgb(217 214 214);
+          border-radius: 30px;
+          padding: 6px 12px;
+          font-size: 14px;
+          cursor: pointer;
+        }
+
+        .masked-api-key {
+          position: relative;
+          top: 2px
+        }
       `}</style>
     </Page>
   );
 }
 
-function Statistics({ stats, totalOrders, totalSales, richsmmData,apiKey_user }) {
+function Statistics({ stats, totalOrders, totalSales, richsmmData,apiKey_user, totalCosts, navigate }) {
+
+  const deleteHandler = () => {
+    localStorage.clear();
+      navigate("/app");
+  }
   return (
     <>
       <TextContainer style={{ display: "flex", gap: 16 }}>
-        <OrdersStatistics totalOrders={totalOrders} totalSales={totalSales} stats={stats} richsmmData={richsmmData} />
+        <OrdersStatistics totalOrders={totalOrders} totalSales={totalSales} stats={stats} richsmmData={richsmmData} totalCosts={totalCosts} />
       </TextContainer>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
@@ -248,23 +307,31 @@ function Statistics({ stats, totalOrders, totalSales, richsmmData,apiKey_user })
             gap: 10,
           }}
         >
-          <p>
-            <strong>Balance:</strong> ${richsmmData?.balance || "0"}
-          </p>
-          <Button
-            primary
-            onClick={() =>
+          <p><strong>Balance:</strong> ${parseFloat(richsmmData?.balance || "0").toFixed(2)}</p>
+          
+          <a href="https://richsmm.com" target="_blank" rel="noopener noreferrer">
+              <button className="funds-button" onClick={() =>
               window.open("https://richsmm.com/addfunds", "_blank")
-            }
-          >
-            Add Funds
-          </Button>
+            }>Add Funds</button>
+            </a>
         </div>
 
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <p>
             <strong>Website:</strong>{" "}
-            <Link url="https://richsmm.com">Richsmm.com</Link>
+            <a
+              href="https://richsmm.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                color: "#006dff",
+                textDecoration: "none",
+              }}
+              onMouseOver={(e) => (e.target.style.textDecoration = "underline")}
+              onMouseOut={(e) => (e.target.style.textDecoration = "none")}
+            >
+              Richsmm.com
+            </a>
           </p>
         </div>
 
@@ -284,9 +351,16 @@ function Statistics({ stats, totalOrders, totalSales, richsmmData,apiKey_user })
           }}
         >
           <p>
-            <strong>API Key:</strong> {apiKey_user ? apiKey_user : ""}
+            <strong>API Key:</strong> 
+            {apiKey_user ? (
+              <>
+                {apiKey_user.slice(0, 6)}
+                <span className="masked-api-key">*********************</span>
+                {apiKey_user.slice(-6)}
+              </>
+            ) : ""}
           </p>
-          <Button destructive>Delete</Button>
+          <button className="delete-button" onClick={() => deleteHandler()}>Delete</button>
         </div>
       </div>
     </>

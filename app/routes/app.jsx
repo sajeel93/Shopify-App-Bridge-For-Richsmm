@@ -16,6 +16,12 @@ export const loader = async ({ request }) => {
 
 export default function App() {
   const { apiKey } = useLoaderData();
+  let storedApiKey = null; // Define storedApiKey with a default value
+
+  // Check if we're on the client before accessing localStorage
+  if (typeof window !== "undefined") {
+    storedApiKey = localStorage.getItem("apiKey");
+  }
 
   return (
     <AppProvider isEmbeddedApp apiKey={apiKey}>
@@ -23,10 +29,14 @@ export default function App() {
         <Link to="/app" rel="home">
           Home
         </Link>
+        {storedApiKey &&
+        <>
         <Link to="/app/dashboard">Dashboard</Link>
         <Link to="/app/orders">Orders</Link>
         <Link to="/app/services">Services</Link>
         <Link to="/app/settings">Settings</Link>
+        </>
+        }
       </NavMenu>
       <Outlet />
     </AppProvider>

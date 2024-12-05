@@ -6,7 +6,7 @@ import {
   Button,
   Select,
 } from "@shopify/polaris";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLoaderData } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import { authenticate } from "../shopify.server";
@@ -41,27 +41,9 @@ export const loader = async ({ request }) => {
 
     const productsData = await productsResponse.json();
 
-    console.log(productsData, "productsData");
-
-    // External API call to fetch services data
-    const formData = new URLSearchParams();
-    formData.append("key", "9bdec003037ce39b4f9336afdd3a931a");
-    formData.append("action", "services");
-
-    const response = await fetch("https://richsmm.com/api/v2", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: formData.toString(),
-    });
-
-    const richsmmData = await response.json();
-
     // Assuming richsmmData contains an array of services
     return json({
       orders: productsData?.data.products.edges,
-      richsmmData: richsmmData || [], // Make sure this is the correct key
     });
   } catch (error) {
     console.error("Loader error: ", error);
@@ -70,9 +52,10 @@ export const loader = async ({ request }) => {
 };
 
 export default function Services() {
-  const { orders, richsmmData } = useLoaderData();
+  const { orders } = useLoaderData();
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1); // Current page state
+  const [richsmmData, setRichsmmData] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10); // Default rows per page
 
   const rowsOptions = [
@@ -81,11 +64,36 @@ export default function Services() {
     { label: "100 rows", value: 100 },
   ];
 
-  console.log(orders, "orders Shopify");
-  console.log(richsmmData, "richsmmData");
+  useEffect(() => {
+    const storedApiKey = localStorage.getItem("apiKey");
+
+    if (storedApiKey) {
+      const richsmmHandler = async () => {
+      const formData = new URLSearchParams();
+      formData.append("key", storedApiKey );
+      formData.append("action", "services");
+
+      const response = await fetch("https://richsmm.com/api/v2", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: formData.toString(),
+      });
+
+      const richsmmRes = await response.json();
+      setRichsmmData(richsmmRes)
+    }
+
+      richsmmHandler()
+      
+    } else {
+      console.log("No API key found in cookies.");
+    }
+  }, []);
 
   // Filter services based on the search query
-  const filteredServices = richsmmData.filter((service) =>
+  const filteredServices = richsmmData?.error ? [] : richsmmData?.filter((service) =>
     service.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
@@ -147,6 +155,15 @@ export default function Services() {
     justifyContent: "center",
   };
 
+  // Internal CSS for the search field
+  const searchFieldStyle = {
+    padding: "10px",
+    borderRadius: "30px",
+    border: "1px solid #ccc",
+    width: "100%",
+    marginBottom: "15px"
+  };
+
   return (
     <Page>
       <div style={{ marginBottom: 10 }}>
@@ -176,13 +193,14 @@ export default function Services() {
 
       <Card>
         <div style={searchBoxStyle}>
-          <TextField
-            value={searchQuery}
-            onChange={setSearchQuery}
-            placeholder="Search services"
-            label="Search"
-            labelHidden
-          />
+          <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value || "")}
+          placeholder="Search services"
+          autoComplete="off"
+          style={searchFieldStyle}
+        />
         </div>
 
         {/* DataTable for displaying services */}

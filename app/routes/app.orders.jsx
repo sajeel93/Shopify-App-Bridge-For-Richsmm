@@ -69,6 +69,7 @@ export default function Orders() {
   const { orders } = useLoaderData();
   const [selectedTab, setSelectedTab] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  
 
   // Function to calculate order counts dynamically
   const getOrderCount = (status) => {
@@ -120,10 +121,10 @@ export default function Orders() {
   };
 
   // Filter orders based on selected tab and search query
-  const filteredOrders = orders.filter((order) => {
+  const filteredOrders = orders?.filter((order) => {
     const productTitle =
       order.node.lineItems.edges[0]?.node.title.toLowerCase();
-    const matchesSearch = productTitle.includes(searchQuery.toLowerCase());
+    const matchesSearch = productTitle.includes(searchQuery?.toLowerCase());
 
     if (selectedTab === "All") {
       return matchesSearch;
@@ -177,24 +178,31 @@ export default function Orders() {
                     : "grey", // Default color for unhandled statuses
       color: "white", // Set text color to white for better contrast
       padding: "5px 10px",
-      borderRadius: "5px",
+      borderRadius: "30px",
       textAlign: "center",
+      height: "26px"
     };
 
     const cancelButtonStyle = {
       backgroundColor: "red",
       color: "white", // Set text color to white for better contrast
       padding: "5px 10px",
-      borderRadius: "5px",
+      borderRadius: "30px",
       textAlign: "center",
       border: "0px",
       cursor: "pointer",
+      height: "26px",
+      marginTop: "-3px"
     };
 
     return [
-      <Link url={`/shopify/order/${order.node.id}`} external>
+      <a 
+        href={`https://admin.shopify.com/orders/${order.node.id.split("/").pop()}`} 
+        target="_blank" 
+        rel="noopener noreferrer"
+      >
         {order.node.id}
-      </Link>,
+      </a>,
       new Date(order.node.createdAt).toLocaleDateString(),
       order.node.lineItems.edges[0]?.node.title || "N/A",
       "Service Name",
@@ -243,6 +251,15 @@ export default function Orders() {
     marginBottom: "10px",
   };
 
+   // Internal CSS for the search field
+  const searchFieldStyle = {
+    padding: "10px",
+    borderRadius: "30px",
+    border: "1px solid #ccc",
+    width: "100%",
+    marginBottom: "15px"
+  };
+
   return (
     <Page>
       <div style={{ marginBottom: 10 }}>
@@ -271,12 +288,13 @@ export default function Orders() {
       </div>
       <br />
       <Card>
-        <TextField
+        <input
+          type="text"
           value={searchQuery}
-          onChange={setSearchQuery}
+          onChange={(e) => setSearchQuery(e.target.value || "")}
           placeholder="Search orders"
-          label="Search"
-          labelHidden
+          autoComplete="off"
+          style={searchFieldStyle}
         />
         {/* Custom Tabs */}
         <div style={{ display: "flex", marginTop: 10 }}>
@@ -290,7 +308,7 @@ export default function Orders() {
                 backgroundColor:
                   selectedTab === tab.id ? "blue" : "transparent",
                 color: selectedTab === tab.id ? "white" : "black",
-                borderRadius: selectedTab === tab.id ? "10px" : "0px",
+                borderRadius: selectedTab === tab.id ? "30px" : "0px",
               }}
             >
               {tab.label}

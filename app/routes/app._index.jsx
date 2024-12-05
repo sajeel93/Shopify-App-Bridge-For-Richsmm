@@ -31,7 +31,7 @@ export const action = async ({ request }) => {
     });
 
     const result = await response.json();
-
+    
     if (!response.ok) {
       throw new Error(result.error || "Failed to fetch API balance");
     }
@@ -54,16 +54,22 @@ export default function ApiSetup() {
   const [errorMessage, setErrorMessage] = useState(
     actionData?.errorMessage || ""
   );
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+  
 
   useEffect(() => {
-    if (actionData?.apiKey) {
-      
-      
-      // Store the API key in cookies or localStorage upon successful action
-      Cookies.set("apiKey", actionData?.apiKey); // Store for 7 days
-      localStorage.setItem("apiKey", actionData?.apiKey);
-      navigate("dashboard");
+    // Check if code is running in the browser
+    if (typeof window !== "undefined") {
+      const storedApiKey = localStorage.getItem("apiKey");
+
+      if (actionData?.apiKey) {
+        // Store the API key in cookies or localStorage upon successful action
+        Cookies.set("apiKey", actionData?.apiKey); // Store for 7 days
+        localStorage.setItem("apiKey", actionData?.apiKey);
+        navigate("dashboard");
+      } else if (storedApiKey) {
+        navigate("dashboard");
+      }
     }
   }, [actionData?.apiKey]);
 
@@ -86,21 +92,49 @@ export default function ApiSetup() {
             <TextContainer>
               <h1>API Setup</h1>
               <h5>Website</h5>
-              <Link target="_blank" url="https://richsmm.com">
+              <a
+                href="https://richsmm.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  color: "#006dff",
+                  textDecoration: "none",
+                }}
+                onMouseOver={(e) => (e.target.style.textDecoration = "underline")}
+                onMouseOut={(e) => (e.target.style.textDecoration = "none")}
+              >
                 Richsmm.com
-              </Link>
+              </a>
             </TextContainer>
 
             <Form method="post">
-              <TextField
-                label="Enter API key"
-                placeholder="e.g. 9bdec003037ce39b4f9336afdd3a931a"
-                name="apiKey" // The name attribute will send this value in the form data
-                value={apiKey}
-                onChange={(value) => setApiKey(value)}
-                autoComplete="off"
-                error={errorMessage !== ""} // Display error style if there's an error
-              />
+              <div style={{ marginBottom: "15px" }}>
+                <label
+                  htmlFor="apiKey"
+                  style={{
+                    display: "block",
+                    fontWeight: "bold",
+                    marginBottom: "5px",
+                  }}
+                >
+                  Enter API key
+                </label>
+                <input
+                  type="text"
+                  id="apiKey" // Connects label with input field
+                  placeholder="e.g. 9bdec003037ce39b4f9336afdd3a931a"
+                  name="apiKey"
+                  value={apiKey}
+                  onChange={(e) => setApiKey(e.target.value)}
+                  autoComplete="off"
+                  style={{
+                    border: errorMessage ? "1px solid red" : "1px solid #ccc",
+                    padding: "10px",
+                    borderRadius: "30px",
+                    width: "100%",
+                  }}
+                />
+              </div>
               <div
                 style={{
                   display: "flex",
@@ -111,10 +145,10 @@ export default function ApiSetup() {
               >
                 <button
                   style={{
-                    backgroundColor: "#007bff",
+                    backgroundColor: "#006dff",
                     color: "#fff",
                     border: "none",
-                    borderRadius: 6,
+                    borderRadius: "30px",
                     padding: "0.8rem",
                     fontSize: "1rem",
                     cursor: "pointer",
@@ -125,15 +159,22 @@ export default function ApiSetup() {
                 >
                   Connect API key
                 </button>
-                <Button
-                  fullWidth
-                  external
-                  blue
-                  target={"_blank"}
-                  url="https://richsmm.com/account"
-                >
-                  View API key
-                </Button>
+                <button 
+                style={{
+                  backgroundColor: "#ddd",
+                    color: "#444",
+                    border: "1px solid #eee",
+                    borderRadius: "30px",
+                    padding: "0.8rem",
+                    fontSize: "1rem",
+                    cursor: "pointer",
+                    width: "100%",
+                    fontWeight: "500"
+                  }}
+                  onClick={() =>
+                    window.open("https://richsmm.com/account", "_blank")
+                  }
+                  >View API key</button>
               </div>
             </Form>
 
@@ -150,15 +191,6 @@ export default function ApiSetup() {
                 <p style={{ textAlign: "center", color: "green" }}>
                   {actionData.successMessage}
                 </p>
-                <Button
-                  fullWidth
-                  external
-                  blue
-                  target={"_blank"}
-                  url="https://admin.shopify.com/apps/richsmm-two/app/dashboard"
-                >
-                  Go to Dashboard
-                </Button>
               </TextContainer>
             )}
           </div>
