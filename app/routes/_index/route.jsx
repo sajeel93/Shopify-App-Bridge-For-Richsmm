@@ -27,7 +27,7 @@ export default function App() {
               <span>e.g: my-shop-domain.myshopify.com</span>
             </label>
             <button className={styles.button} type="submit">
-              Log in
+              Install Richsmm Shopify App
             </button>
           </Form>
         )}

@@ -110,7 +110,7 @@ export const loader = async ({ request }) => {
 
 export default function DashboardPage() {
   const products = useLoaderData();
-  const [selectedTab, setSelectedTab] = useState(5);
+  const [selectedTab, setSelectedTab] = useState(0);
   const [apiKey_user, setApiKey_user] = useState("");
   const [richsmmData, setRichsmmData] = useState("");
   const [stats, setStats] = useState(products);
@@ -146,6 +146,7 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
+    handleTabChange(0);
     const storedApiKey = localStorage.getItem("apiKey");
 
     if (storedApiKey) {
@@ -175,8 +176,9 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <Page title="Statistics">
-      <Card>
+    <Page>
+      <div style={{background: "#fff", borderRadius: "30px"}}>
+        <h1 style={{padding: "24px 20px 0px 20px", fontSize: "large", fontWeight: "bold"}}>Statistics</h1>
         {/* Custom Tabs */}
         <div className="custom-tabs">
           {tabs.map((tab, index) => (
@@ -192,7 +194,7 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        <div style={{ padding: "20px" }}>
+        <div style={{ padding: "5px 20px 20px 20px" }}>
           <Statistics
             stats={stats}
             totalOrders={totalOrders}
@@ -203,7 +205,7 @@ export default function DashboardPage() {
             navigate={navigate}
           />
         </div>
-      </Card>
+      </div>
 
       {/* Internal CSS for custom tab styling */}
       <style jsx>{`
@@ -211,7 +213,6 @@ export default function DashboardPage() {
           display: flex;
           gap: 12px;
           padding: 16px;
-          border-bottom: 2px solid #ccc;
         }
 
         .tab-button {
@@ -219,9 +220,9 @@ export default function DashboardPage() {
           border: none;
           padding: 10px 20px;
           cursor: pointer;
-          font-size: 16px;
+          font-size: 16px 20px;
           color: #333;
-          border-radius: 4px;
+          border-radius: 30px;
           transition:
             color 0.3s,
             background-color 0.3s;
@@ -231,11 +232,16 @@ export default function DashboardPage() {
           background-color: #f0f0f0;
           border-radius: 30px;
         }
+        .tab-button:focus-visible {
+          background-color: #f0f0f0;
+          border-radius: 30px;
+        }
 
         .active-tab {
           background-color: #007bff;
           color: white;
           border-radius: 30px;
+          font-weight: bold
         }
 
         .active-tab:hover {
@@ -250,6 +256,7 @@ export default function DashboardPage() {
           padding: 6px 12px;
           font-size: 14px;
           cursor: default;
+          font-weight: bold
         }
 
         .status-button.success {
@@ -257,14 +264,19 @@ export default function DashboardPage() {
         }
 
         .funds-button {
-          background-color: #eee;
-          color: black;
+          background-color: #fff;
+          color: #303030;
           border: 1px solid rgb(217 214 214);
           border-radius: 30px;
           padding: 6px 12px;
           font-size: 14px;
           cursor: pointer;
-          
+          font-weight: bold
+        }
+
+        .funds-button:hover {
+          background-color: #000;
+          color: #fff
         }
         
         .delete-button {
@@ -307,18 +319,16 @@ function Statistics({ stats, totalOrders, totalSales, richsmmData,apiKey_user, t
             gap: 10,
           }}
         >
-          <p><strong>Balance:</strong> ${parseFloat(richsmmData?.balance || "0").toFixed(2)}</p>
+          <p><strong style={{width: "65px", display: "inline-block"}}>Balance:</strong> ${parseFloat(richsmmData?.balance || "0").toFixed(2)}</p>
           
-          <a href="https://richsmm.com" target="_blank" rel="noopener noreferrer">
-              <button className="funds-button" onClick={() =>
-              window.open("https://richsmm.com/addfunds", "_blank")
-            }>Add Funds</button>
+          <a href="https://richsmm.com/addfunds" target="_blank" rel="noopener noreferrer">
+              <button className="funds-button">Add Funds</button>
             </a>
         </div>
 
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <p>
-            <strong>Website:</strong>{" "}
+            <strong style={{width: "65px", display: "inline-block"}}>Website:</strong>{" "}
             <a
               href="https://richsmm.com"
               target="_blank"
@@ -337,7 +347,7 @@ function Statistics({ stats, totalOrders, totalSales, richsmmData,apiKey_user, t
 
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <p>
-            <strong>Status:</strong> {/* Custom Status Button */}
+            <strong style={{width: "65px", display: "inline-block"}}>Status:</strong> {/* Custom Status Button */}
             <button className="status-button success">Active</button>
           </p>
         </div>
@@ -351,7 +361,7 @@ function Statistics({ stats, totalOrders, totalSales, richsmmData,apiKey_user, t
           }}
         >
           <p>
-            <strong>API Key:</strong> 
+            <strong style={{width: "65px", display: "inline-block"}}>API Key:</strong>{" "}
             {apiKey_user ? (
               <>
                 {apiKey_user.slice(0, 6)}
@@ -360,7 +370,7 @@ function Statistics({ stats, totalOrders, totalSales, richsmmData,apiKey_user, t
               </>
             ) : ""}
           </p>
-          <button className="delete-button" onClick={() => deleteHandler()}>Delete</button>
+          <button className="funds-button" onClick={() => deleteHandler()}>Delete</button>
         </div>
       </div>
     </>

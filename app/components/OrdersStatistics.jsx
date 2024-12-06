@@ -15,13 +15,13 @@ const OrdersStatistics = ({ totalOrders, totalSales, stats, totalCosts }) => {
     <div style={{ display: "flex", gap: "32px", marginBottom: "20px" }}>
       {stats?.length === 0 || stats?.length > 0  ? 
       <> <p>
-        <strong>Sales:</strong> ${totalOrdersPrice}
+        <strong>Sales:</strong> ${parseFloat(totalCosts || "0.00").toFixed(2)}
       </p>
       <p>
         <strong>Orders:</strong> {stats?.length}
       </p> 
       <p>
-        <strong>Costs:</strong> ${parseFloat(totalCosts || "0.00").toFixed(2)}
+        <strong>Costs:</strong> ${totalOrdersPrice}
       </p>
       <p>
         <strong>Profit:</strong> ${(totalCosts - totalOrdersPrice).toFixed(2)}
@@ -30,13 +30,13 @@ const OrdersStatistics = ({ totalOrders, totalSales, stats, totalCosts }) => {
       :
       <> 
       <p>
-        <strong>Sales:</strong> ${totalSales}
+        <strong>Sales:</strong> ${parseFloat(totalCosts || "0.00").toFixed(2)}
       </p>
       <p>
         <strong>Orders:</strong> {totalOrders}
       </p>
       <p>
-        <strong>Costs:</strong> ${parseFloat(totalCosts || "0.00").toFixed(2)}
+        <strong>Costs:</strong> ${totalSales}
       </p>
       <p>
         <strong>Profit:</strong> ${(totalCosts - totalSales).toFixed(2)}

@@ -85,13 +85,13 @@ export default function ApiSetup() {
 
   return (
     <Page>
-      <TitleBar title="API Setup" />
       <div style={{ width: "60%", borderRadius: "10px" }}>
-        <Card sectioned>
+        <div style={{background: "#fff", borderRadius: "30px", padding: "24px"}}>
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             <TextContainer>
-              <h1>API Setup</h1>
-              <h5>Website</h5>
+              <h1 style={{fontSize: "large", fontWeight: "bold"}}>API Setup</h1>
+              
+              <h5 style={{fontWeight: "bold"}}>Website</h5>
               <a
                 href="https://richsmm.com"
                 target="_blank"
@@ -156,13 +156,15 @@ export default function ApiSetup() {
                     fontWeight: "500",
                   }}
                   type="submit" // Triggers the form submission
+                  onMouseOver={(e) => (e.target.style.background = "#000")}
+                  onMouseOut={(e) => (e.target.style.background = "#006dff")}
                 >
                   Connect API key
                 </button>
                 <button 
                 style={{
-                  backgroundColor: "#ddd",
-                    color: "#444",
+                  backgroundColor: "#f4f4f4",
+                    color: "#303030",
                     border: "1px solid #eee",
                     borderRadius: "30px",
                     padding: "0.8rem",
@@ -174,6 +176,8 @@ export default function ApiSetup() {
                   onClick={() =>
                     window.open("https://richsmm.com/account", "_blank")
                   }
+                  onMouseOver={(e) => (e.target.style.background = "#000", e.target.style.color = "#fff")}
+                  onMouseOut={(e) => (e.target.style.background = "#f4f4f4", e.target.style.color = "#303030")}
                   >View API key</button>
               </div>
             </Form>
@@ -194,7 +198,7 @@ export default function ApiSetup() {
               </TextContainer>
             )}
           </div>
-        </Card>
+        </div>
       </div>
     </Page>
   );

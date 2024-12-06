@@ -23,6 +23,7 @@ export const loader = async ({ request }) => {
           edges {
             node {
               id
+              name
               createdAt
               totalPriceSet {
                 shopMoney {
@@ -201,7 +202,7 @@ export default function Orders() {
         target="_blank" 
         rel="noopener noreferrer"
       >
-        {order.node.id}
+        {order.node.name}
       </a>,
       new Date(order.node.createdAt).toLocaleDateString(),
       order.node.lineItems.edges[0]?.node.title || "N/A",
@@ -287,7 +288,7 @@ export default function Orders() {
         </a>
       </div>
       <br />
-      <Card>
+      <div style={{background: "#fff", borderRadius: "30px", padding: "16px 24px"}}>
         <input
           type="text"
           value={searchQuery}
@@ -297,7 +298,14 @@ export default function Orders() {
           style={searchFieldStyle}
         />
         {/* Custom Tabs */}
-        <div style={{ display: "flex", marginTop: 10 }}>
+        <div style={{ 
+          display: "flex", 
+          marginTop: 1, 
+          flexWrap: "nowrap", 
+          overflowX: "auto", 
+          whiteSpace: "nowrap", 
+          gap: "10px" // Add spacing between tabs 
+        }}>
           {tabData.map((tab) => (
             <div
               key={tab.id}
@@ -305,10 +313,10 @@ export default function Orders() {
               style={{
                 padding: "10px 10px",
                 cursor: "pointer",
-                backgroundColor:
-                  selectedTab === tab.id ? "blue" : "transparent",
+                backgroundColor: selectedTab === tab.id ? "#006dff" : "transparent",
                 color: selectedTab === tab.id ? "white" : "black",
                 borderRadius: selectedTab === tab.id ? "30px" : "0px",
+                flexShrink: 0, // Prevent shrinking in small screens
               }}
             >
               {tab.label}
@@ -350,7 +358,7 @@ export default function Orders() {
           ]}
           rows={rows}
         />
-      </Card>
+      </div>
     </Page>
   );
 }
