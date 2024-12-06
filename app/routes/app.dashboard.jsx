@@ -135,7 +135,7 @@ export default function DashboardPage() {
     const { start, end } = getDateRange(timeRange);
 
     // Filter orders from orderData based on the selected date range
-    const filteredOrders = orderData.data.orders.edges.filter((order) => {
+    const filteredOrders = orderData?.data.orders.edges.filter((order) => {
       const createdAt = new Date(order.node.createdAt);
       return createdAt >= new Date(start) && createdAt <= new Date(end);
     });
