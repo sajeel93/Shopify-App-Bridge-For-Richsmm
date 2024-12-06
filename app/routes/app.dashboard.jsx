@@ -110,7 +110,7 @@ export const loader = async ({ request }) => {
 
 export default function DashboardPage() {
   const products = useLoaderData();
-  const [selectedTab, setSelectedTab] = useState(0);
+  const [selectedTab, setSelectedTab] = useState(5);
   const [apiKey_user, setApiKey_user] = useState("");
   const [richsmmData, setRichsmmData] = useState("");
   const [stats, setStats] = useState(products);
@@ -146,7 +146,6 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
-    handleTabChange(0);
     const storedApiKey = localStorage.getItem("apiKey");
 
     if (storedApiKey) {
