@@ -6,6 +6,7 @@ import {
   Link,
   Button,
 } from "@shopify/polaris";
+import { Icon } from '@iconify/react';
 import { useState } from "react";
 import { useLoaderData } from "@remix-run/react";
 import { json } from "@remix-run/node";
@@ -252,18 +253,27 @@ export default function Orders() {
     marginBottom: "10px",
   };
 
-   // Internal CSS for the search field
+  const searchContainerStyle = {
+    display: "flex",
+    alignItems: "center",
+    border: "1px solid #ccc",
+    borderRadius: "30px",
+    padding: "5px 10px",
+    width: "100%",
+    marginBottom: "15px",
+  };
+
   const searchFieldStyle = {
+    border: "none",
+    outline: "none",
+    flex: 1,
     padding: "10px",
     borderRadius: "30px",
-    border: "1px solid #ccc",
-    width: "100%",
-    marginBottom: "15px"
   };
 
   return (
     <Page>
-      <div style={{ marginBottom: 10 }}>
+      {/* <div style={{ marginBottom: 10 }}>
         <a
           href="https://richsmm.com/orders"
           target="_blank"
@@ -286,17 +296,23 @@ export default function Orders() {
             Orders
           </span>
         </a>
-      </div>
+      </div> */}
       <br />
       <div style={{background: "#fff", borderRadius: "30px", padding: "16px 24px"}}>
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value || "")}
-          placeholder="Search orders"
-          autoComplete="off"
-          style={searchFieldStyle}
-        />
+        <h1 style={{padding: "10px 0px 20px 0px", fontSize: "large", fontWeight: "bold"}}>Orders</h1>
+        
+        <div style={searchContainerStyle}>
+          <Icon icon="ri:search-line" width="24" height="24" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search Orders"
+            style={searchFieldStyle}
+            autoComplete="off"
+          />
+        </div>
+        
         {/* Custom Tabs */}
         <div style={{ 
           display: "flex", 
@@ -304,18 +320,23 @@ export default function Orders() {
           flexWrap: "nowrap", 
           overflowX: "auto", 
           whiteSpace: "nowrap", 
-          gap: "10px" // Add spacing between tabs 
+          gap: "5px",
+          paddingBottom: "10px",
+          scrollbarWidth: "thin",
+          scrollbarColor: "rgb(0, 123, 255) rgb(241, 241, 241)"
         }}>
           {tabData.map((tab) => (
             <div
               key={tab.id}
               onClick={() => handleTabChange(tab.id)}
               style={{
-                padding: "10px 10px",
+                padding: "8px 15px",
                 cursor: "pointer",
-                backgroundColor: selectedTab === tab.id ? "#006dff" : "transparent",
-                color: selectedTab === tab.id ? "white" : "black",
+                backgroundColor: selectedTab === tab.id ? "#007bff" : "transparent",
+                color: selectedTab === tab.id ? "white" : "#333",
                 borderRadius: selectedTab === tab.id ? "30px" : "0px",
+                border: "none",
+                transition: "color 0.3s, background-color 0.3s",
                 flexShrink: 0, // Prevent shrinking in small screens
               }}
             >

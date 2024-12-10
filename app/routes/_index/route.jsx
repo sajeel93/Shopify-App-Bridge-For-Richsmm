@@ -22,9 +22,9 @@ export default function App() {
         {showForm && (
           <Form className={styles.form} method="post" action="/auth/login">
             <label className={styles.label}>
-              <span>Shop domain</span>
-              <input className={styles.input} type="text" name="shop" />
-              <span>e.g: my-shop-domain.myshopify.com</span>
+              <span style={{fontWeight: "bold", fontFamily: "sans-serif"}}>Shopify Store Domain</span>
+              <input className={styles.input} type="text" name="shop" placeholder="my-shop-domain.myshopify.com"/>
+              {/* <span>e.g: my-shop-domain.myshopify.com</span> */}
             </label>
             <button className={styles.button} type="submit">
               Install Richsmm Shopify App

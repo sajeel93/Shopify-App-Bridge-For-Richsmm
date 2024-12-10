@@ -100,7 +100,7 @@ export default function Settings() {
   };
 
   return (
-    <Page title="Settings">
+    <Page>
       <div style={{background: "#fff", borderRadius: "30px", padding: "16px 24px"}}>
         <FormLayout>
           <FormLayout.Group>
@@ -121,11 +121,12 @@ export default function Settings() {
 
           <p
             style={{
-              color: "#637381",
+              color: "#000",
               fontSize: "12px",
-              background: "aliceblue",
+              background: "#f0f0f0",
               padding: "10px",
               borderRadius: "30px",
+              textAlign: "center"
             }}
           >
             You can give your customers a custom quantity bonus. For example,
@@ -145,7 +146,7 @@ export default function Settings() {
             </FormLayout.Group>
           )}
 
-          <button 
+          {/* <button 
             className="funds-button" 
             onClick={() => handleSubmit()}
             style={{
@@ -158,7 +159,7 @@ export default function Settings() {
               cursor: "pointer",
               fontWeight: "600"
             }}
-          >Save Settings</button>
+          >Save Settings</button> */}
         </FormLayout>
       </div>
     </Page>

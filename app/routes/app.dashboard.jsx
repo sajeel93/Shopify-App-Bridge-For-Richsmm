@@ -177,7 +177,7 @@ export default function DashboardPage() {
   return (
     <Page>
       <div style={{background: "#fff", borderRadius: "30px"}}>
-        <h1 style={{padding: "24px 20px 0px 20px", fontSize: "large", fontWeight: "bold"}}>Statistics</h1>
+        <h1 style={{padding: "24px 24px 0px 24px", fontSize: "large", fontWeight: "bold"}}>Dashboard</h1>
         {/* Custom Tabs */}
         <div className="custom-tabs">
           {tabs.map((tab, index) => (
@@ -193,7 +193,7 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        <div style={{ padding: "5px 20px 20px 20px" }}>
+        <div style={{ padding: "5px 24px 20px 24px" }}>
           <Statistics
             stats={stats}
             totalOrders={totalOrders}
@@ -211,7 +211,11 @@ export default function DashboardPage() {
         .custom-tabs {
           display: flex;
           gap: 12px;
-          padding: 16px;
+          padding: 16px 24px;
+          flex-wrap: nowrap; /* Prevents wrapping */
+          overflow-x: auto;
+          scrollbar-width: thin;
+          scrollbar-color: rgb(0, 123, 255) rgb(241, 241, 241)
         }
 
         .tab-button {
@@ -222,9 +226,8 @@ export default function DashboardPage() {
           font-size: 16px 20px;
           color: #333;
           border-radius: 30px;
-          transition:
-            color 0.3s,
-            background-color 0.3s;
+          transition: color 0.3s, background-color 0.3s;
+          white-space: nowrap; /* Ensures text stays in one line */
         }
 
         .tab-button:hover {
@@ -274,23 +277,36 @@ export default function DashboardPage() {
         }
 
         .funds-button:hover {
-          background-color: #000;
+          background-color: #006dff;
           color: #fff
         }
         
         .delete-button {
-          background-color: red;
-          color: white;
+          background-color: #fff;
+          color: #303030;
           border: 1px solid rgb(217 214 214);
           border-radius: 30px;
           padding: 6px 12px;
           font-size: 14px;
           cursor: pointer;
+          font-weight: bold
+        }
+
+        .delete-button:hover {
+          background-color: red;
+          color: #fff
         }
 
         .masked-api-key {
           position: relative;
           top: 2px
+        }
+
+        /* Media query for screen width 767px and below */
+        @media (max-width: 767px) {
+          .custom-tabs {
+            margin-bottom: 20px;
+          }
         }
       `}</style>
     </Page>
@@ -369,7 +385,7 @@ function Statistics({ stats, totalOrders, totalSales, richsmmData,apiKey_user, t
               </>
             ) : ""}
           </p>
-          <button className="funds-button" onClick={() => deleteHandler()}>Delete</button>
+          <button className="delete-button" onClick={() => deleteHandler()}>Delete</button>
         </div>
       </div>
     </>

@@ -129,7 +129,7 @@ export default function ApiSetup() {
                   autoComplete="off"
                   style={{
                     border: errorMessage ? "1px solid red" : "1px solid #ccc",
-                    padding: "10px",
+                    padding: "12px",
                     borderRadius: "30px",
                     width: "100%",
                   }}
@@ -156,7 +156,7 @@ export default function ApiSetup() {
                     fontWeight: "500",
                   }}
                   type="submit" // Triggers the form submission
-                  onMouseOver={(e) => (e.target.style.background = "#000")}
+                  onMouseOver={(e) => (e.target.style.background = "#195fbb")}
                   onMouseOut={(e) => (e.target.style.background = "#006dff")}
                 >
                   Connect API key
@@ -176,7 +176,7 @@ export default function ApiSetup() {
                   onClick={() =>
                     window.open("https://richsmm.com/account", "_blank")
                   }
-                  onMouseOver={(e) => (e.target.style.background = "#000", e.target.style.color = "#fff")}
+                  onMouseOver={(e) => (e.target.style.background = "#dbdbdb")}
                   onMouseOut={(e) => (e.target.style.background = "#f4f4f4", e.target.style.color = "#303030")}
                   >View API key</button>
               </div>

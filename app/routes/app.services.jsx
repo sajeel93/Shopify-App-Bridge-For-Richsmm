@@ -6,6 +6,7 @@ import {
   Button,
   Select,
 } from "@shopify/polaris";
+import { Icon } from '@iconify/react';
 import { useState, useEffect } from "react";
 import { useLoaderData } from "@remix-run/react";
 import { json } from "@remix-run/node";
@@ -149,24 +150,27 @@ export default function Services() {
     marginBottom: "10px",
   };
 
-  const searchBoxStyle = {
-    marginBottom: "15px",
+  const searchContainerStyle = {
     display: "flex",
-    justifyContent: "center",
+    alignItems: "center",
+    border: "1px solid #ccc",
+    borderRadius: "30px",
+    padding: "5px 10px",
+    width: "100%",
+    marginBottom: "15px",
   };
 
-  // Internal CSS for the search field
   const searchFieldStyle = {
+    border: "none",
+    outline: "none",
+    flex: 1,
     padding: "10px",
     borderRadius: "30px",
-    border: "1px solid #ccc",
-    width: "100%",
-    marginBottom: "15px"
   };
 
   return (
     <Page>
-      <div style={{ marginBottom: 10 }}>
+      {/* <div style={{ marginBottom: 10 }}>
         <a
           href="https://richsmm.com/services"
           target="_blank"
@@ -189,10 +193,11 @@ export default function Services() {
             Services
           </span>
         </a>
-      </div>
+      </div> */}
 
-      <Card>
-        <div style={searchBoxStyle}>
+      <div style={{background: "#fff", borderRadius: "30px",padding: "16px 24px"}}>
+        <h1 style={{padding: "10px 0px 20px 0px", fontSize: "large", fontWeight: "bold"}}>Services</h1>
+        {/* <div style={searchBoxStyle}>
           <input
           type="text"
           value={searchQuery}
@@ -201,6 +206,17 @@ export default function Services() {
           autoComplete="off"
           style={searchFieldStyle}
         />
+        </div> */}
+        <div style={searchContainerStyle}>
+          <Icon icon="ri:search-line" width="24" height="24" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search Service"
+            style={searchFieldStyle}
+            autoComplete="off"
+          />
         </div>
 
         {/* DataTable for displaying services */}
@@ -269,7 +285,7 @@ export default function Services() {
             Total: {filteredServices.length}
           </div> */}
         </div>
-      </Card>
+      </div>
     </Page>
   );
 }

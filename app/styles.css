@@ -1,0 +1,38 @@
+/* Webkit browsers (Chrome, Safari, and others) */
+::-webkit-scrollbar {
+  width: 12px; /* Vertical scrollbar width */
+  height: 12px; /* Horizontal scrollbar height */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Default track color */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #cccccc; /* Default scrollbar thumb color */
+  border-radius: 6px; /* Round edges for the thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #006dff; /* Hover color for the thumb */
+}
+
+/* Firefox (using scrollbar-width and scrollbar-color properties) */
+html {
+  scrollbar-width: thin; /* Makes both vertical and horizontal scrollbars thinner */
+  scrollbar-color: #cccccc #f1f1f1; /* Thumb color and track color */
+}
+
+/* Change the hover color on scroll */
+html:hover {
+  scrollbar-color: #006dff #f1f1f1; /* Thumb hover color and track color */
+}
+
+.Polaris-DataTable__ScrollContainer {
+  scrollbar-width: thin;
+  overflow-x: auto;
+  white-space: nowrap;
+  height: 100%;
+  scrollbar-color: rgb(0, 123, 255) rgb(241, 241, 241);
+  cursor: grab;
+}
