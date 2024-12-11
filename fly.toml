@@ -9,16 +9,12 @@ primary_region = 'syd'
 [build]
 
 [env] 
-
- PORT = "3000"
-
- SHOPIFY_APP_URL = "https://richsmm.fly.dev"
-
- SHOPIFY_API_KEY = "a64a9239b520747b31153c391324030a"
-
- SCOPES = "write_products,read_customers,read_orders,read_products,write_orders"
-
- DATABASE_URL="postgresql://neondb_owner:Hyec1kK9idtC@ep-broad-mud-a5sazf25.us-east-2.aws.neon.tech/neondb?sslmode=require"
+  PORT = "3000"
+  SHOPIFY_APP_URL = "https://richsmm.fly.dev"
+  SHOPIFY_API_KEY = "a64a9239b520747b31153c391324030a"
+  SCOPES = "write_products,read_customers,read_orders,read_products,write_orders"
+  DATABASE_URL="postgresql://neondb_owner:Hyec1kK9idtC@ep-broad-mud-a5sazf25.us-east-2.aws.neon.tech/neondb?sslmode=require"
+  HTTP_PORT = '3000'
 
 [http_service]
   internal_port = 3000
