@@ -3,7 +3,7 @@
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'shopify-app-bridge-for-richsmm'
+app = 'richsmm'
 primary_region = 'syd'
 
 [build]
@@ -12,7 +12,7 @@ primary_region = 'syd'
 
  PORT = "3000"
 
- SHOPIFY_APP_URL = "https://shopify-app-bridge-for-richsmm.fly.dev"
+ SHOPIFY_APP_URL = "https://richsmm.fly.dev"
 
  SHOPIFY_API_KEY = "a64a9239b520747b31153c391324030a"
 
@@ -29,9 +29,9 @@ primary_region = 'syd'
   processes = ['app']
 
 [[vm]]
-  memory = '1gb'
+  memory = '2gb'
   cpu_kind = 'shared'
-  cpus = 1
+  cpus = 2
 
 [resources]
 memory = 1024
