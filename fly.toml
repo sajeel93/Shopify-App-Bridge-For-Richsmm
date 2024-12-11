@@ -25,10 +25,6 @@ primary_region = 'syd'
   processes = ['app']
 
 [[vm]]
-  memory = '2gb'
+  memory = '1gb'
   cpu_kind = 'shared'
-  cpus = 2
-
-[resources]
-memory = 1024
-cpu = "shared"
+  cpus = 1
