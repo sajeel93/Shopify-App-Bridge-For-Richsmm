@@ -208,10 +208,10 @@ export default function Orders() {
       new Date(order.node.createdAt).toLocaleDateString(),
       order.node.lineItems.edges[0]?.node.title || "N/A",
       "Service Name",
-      <Link url={`https://smm.link/${order.node.id}`} external>
+      <Link url={`https://smm.link/${order.node.id}`} external="true">
         {order.node.id}
       </Link>,
-      <Link url={`https://smm.link/${order.node.id}`} external>
+      <Link url={`https://smm.link/${order.node.id}`} external="true">
         {order.node.id}
       </Link>,
       `$${order.node.totalPriceSet.shopMoney.amount}`,
@@ -344,6 +344,22 @@ export default function Orders() {
             </div>
           ))}
         </div>
+
+        {/* Internal CSS for custom table styling */}
+        <style jsx>{`
+          .Polaris-DataTable__ScrollContainer {
+            scrollbar-width: thin;
+            overflow-x: auto;
+            white-space: nowrap;
+            height: 100%;
+            scrollbar-color: rgb(0, 123, 255) rgb(241, 241, 241);
+            cursor: grab;
+          }
+          .Polaris-DataTable__Navigation {
+            display: none !important;
+          }
+
+        `}</style>
 
         {/* DataTable */}
         <DataTable

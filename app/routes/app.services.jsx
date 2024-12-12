@@ -219,6 +219,22 @@ export default function Services() {
           />
         </div>
 
+        {/* Internal CSS for custom table styling */}
+        <style jsx>{`
+          .Polaris-DataTable__ScrollContainer {
+            scrollbar-width: thin;
+            overflow-x: auto;
+            white-space: nowrap;
+            height: 100%;
+            scrollbar-color: rgb(0, 123, 255) rgb(241, 241, 241);
+            cursor: grab;
+          }
+          .Polaris-DataTable__Navigation {
+            display: none !important;
+          }
+
+        `}</style>
+
         {/* DataTable for displaying services */}
         <DataTable
           columnContentTypes={[
