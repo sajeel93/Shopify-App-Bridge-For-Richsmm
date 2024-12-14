@@ -346,7 +346,7 @@ export default function Orders() {
         </div>
 
         {/* Internal CSS for custom table styling */}
-        <style jsx>{`
+        <style jsx="true">{`
           .Polaris-DataTable__ScrollContainer {
             scrollbar-width: thin;
             overflow-x: auto;

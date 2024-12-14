@@ -16,7 +16,7 @@ api_version = "2024-10"
 
   [[webhooks.subscriptions]]
   topics = [ "app/uninstalled" ]
-  uri = "https://corruption-bathrooms-alpha-completion.trycloudflare.com/webhooks/app/uninstalled"
+  uri = "https://richsmm.fly.dev/webhooks/app/uninstalled"
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes

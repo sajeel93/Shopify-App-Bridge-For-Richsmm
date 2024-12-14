@@ -25,6 +25,7 @@
     "node": "^18.20 || ^20.10 || >=21.0.0"
   },
   "dependencies": {
+    "@iconify/react": "^5.1.0",
     "@prisma/client": "^5.22.0",
     "@remix-run/dev": "^2.7.1",
     "@remix-run/eslint-config": "^2.7.1",

@@ -24,7 +24,7 @@ const OrdersStatistics = ({ totalOrders, totalSales, stats, totalCosts }) => {
         <strong>Costs:</strong> ${totalOrdersPrice}
       </p>
       <p>
-        <strong>Profit:</strong> ${(totalCosts - totalOrdersPrice).toFixed(2)}
+        <strong>Profit:</strong> ${(totalCosts - totalOrdersPrice).toFixed(2) || "0.00"}
       </p>
       </>
       :
@@ -39,7 +39,7 @@ const OrdersStatistics = ({ totalOrders, totalSales, stats, totalCosts }) => {
         <strong>Costs:</strong> ${totalSales}
       </p>
       <p>
-        <strong>Profit:</strong> ${(totalCosts - totalSales).toFixed(2)}
+        <strong>Profit:</strong> ${(totalCosts - totalSales).toFixed(2)  || "0.00"}
       </p>
       </>
 }

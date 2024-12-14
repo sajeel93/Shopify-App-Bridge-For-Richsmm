@@ -13,7 +13,7 @@ ENV NODE_ENV=production
 ENV SHOPIFY_APP_URL="https://richsmm.fly.dev"
 ENV SHOPIFY_API_KEY="a64a9239b520747b31153c391324030a"
 ENV SHOPIFY_API_SECRET="ddf8181e451221834066f8805cd125b5"
-ENV DATABASE_URL="postgresql://neondb_owner:Hyec1kK9idtC@ep-broad-mud-a5sazf25.us-east-2.aws.neon.tech/neondb?sslmode=require"
+ENV DATABASE_URL="postgresql://neondb_owner:T0vrfdhQPtE1@ep-jolly-sound-a58ndyu1.us-east-2.aws.neon.tech/neondb?sslmode=require"
 
 
 COPY package.json package-lock.json* ./
