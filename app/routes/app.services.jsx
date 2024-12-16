@@ -93,6 +93,70 @@ export default function Services() {
     }
   }, []);
 
+   // Enhanced matching function
+  const findMatchingProduct = (service) => {
+    // Expanded platform extractors
+    const platformExtractors = [
+      { 
+        platform: 'Soundcloud', 
+        matchers: ['soundcloud', 'SoundCloud', 'sound cloud']
+      },
+      { 
+        platform: 'Spotify', 
+        matchers: ['spotify', 'Spotify']
+      },
+      { 
+        platform: 'Instagram', 
+        matchers: ['Instagram', 'instagram', 'Insta', 'reels']
+      },
+      { 
+        platform: 'YouTube', 
+        matchers: ['youtube', 'yt', 'shorts']
+      },
+      { 
+        platform: 'TikTok', 
+        matchers: ['tiktok', 'tik tok', 'TikTok']
+      },
+      { 
+        platform: 'Twitter', 
+        matchers: ['twitter', 'Twitter', 'x', 'tweet', 'retweets']
+      }
+    ];
+
+    // Function to check if any matcher is in the service name
+    const findPlatform = (serviceName) => {
+      const lowercaseName = serviceName.toLowerCase();
+      const match = platformExtractors.find(platform => 
+        platform.matchers.some(matcher => lowercaseName.includes(matcher))
+      );
+      return match ? match.platform : null;
+    };
+
+    // Find the platform from the service name
+    const platform = findPlatform(service.name);
+
+    // If platform found, find a matching product
+    if (platform) {
+      const matchingProducts = orders.filter(product => {
+        const productTitle = product.node.title.toLowerCase();
+        const productDesc = (product.node.description || '').toLowerCase();
+        const productTags = (product.node.tags || []).map(tag => tag.toLowerCase());
+
+        // Check for platform match in title, description, or tags
+        return (
+          productTitle.includes(platform.toLowerCase()) ||
+          productDesc.includes(platform.toLowerCase()) ||
+          productTags.some(tag => tag.includes(platform.toLowerCase()))
+        );
+      });
+
+      // Return first matching product or null
+      return matchingProducts.length > 0 ? matchingProducts[0].node : null;
+    }
+
+    return null;
+  };
+
   // Filter services based on the search query
   const filteredServices = richsmmData?.error ? [] : richsmmData?.filter((service) =>
     service.name.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -105,22 +169,15 @@ export default function Services() {
 
   // DataTable rows for the services
   const rows = paginatedServices.map((service, index) => {
-    const shopifyProduct = orders[index]?.node || {}; // Get the corresponding Shopify product if available
-    const shopifyVariant = shopifyProduct?.variants?.edges[0]?.node || {}; // Get the first variant for price
-
-    const statusStyles = {
-      backgroundColor: service.status === "Available" ? "green" : "orange",
-      color: "white",
-      padding: "5px 10px",
-      borderRadius: "5px",
-      textAlign: "center",
-    };
+    const matchedProduct = findMatchingProduct(service);// Get the corresponding Shopify product if available
+    // Get product variant details
+    const shopifyVariant = matchedProduct?.variants?.edges[0]?.node || {};
 
     return [
-      shopifyProduct.title || "", // First column: Shopify product name
+      matchedProduct?.title || "", // First column: Shopify product name
       shopifyVariant.price || "", // Second column: Shopify product price
-      service.id, // Third column: Service ID
-      service.name, // Fourth column: Service Name
+      Number(service.service), // Third column: Service ID
+      <span className="wrap-text">{service.name}</span>, // Fourth column: Service Name
       <span>
         {service.min} - {service.max}
       </span>, // Fifth column: Quantity (min-max)
@@ -137,7 +194,8 @@ export default function Services() {
 
   // Rows per page change handler
   const handleRowsPerPageChange = (value) => {
-    setRowsPerPage(Number(value)); // Update the rowsPerPage state correctly
+    const rowValue = parseInt(value, 10);
+    setRowsPerPage(Number(rowValue)); // Update the rowsPerPage state correctly
     setPage(1); // Reset to the first page when rows per page change
   };
 
@@ -168,6 +226,7 @@ export default function Services() {
     borderRadius: "30px",
   };
 
+  
   return (
     <Page>
 
@@ -204,6 +263,16 @@ export default function Services() {
           .search-container:active {
             outline: #007bff;
             border: 1px solid #007bff;
+          }
+
+          .wrap-text {
+            max-width: 300px;
+            display: block;
+            white-space: break-spaces;
+          }
+
+          .Polaris-DataTable__Cell {
+            text-align: left
           }
 
         `}</style>
@@ -294,7 +363,7 @@ export default function Services() {
           <div style={{ textAlign: "right", width: "10%" }}>
             <Select
               options={rowsOptions}
-              value={String(rowsPerPage)} // Make sure value is a string
+              value={rowsPerPage} // Make sure value is a string
               onChange={handleRowsPerPageChange}
             />
           </div>
