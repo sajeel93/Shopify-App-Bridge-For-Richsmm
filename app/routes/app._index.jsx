@@ -54,7 +54,7 @@ export default function ApiSetup() {
   const [errorMessage, setErrorMessage] = useState(
     actionData?.errorMessage || ""
   );
-  const navigate = useNavigate();
+  const navigate = useNavigate();  
   
 
   useEffect(() => {
@@ -85,6 +85,20 @@ export default function ApiSetup() {
 
   return (
     <Page>
+      <style jsx>{`
+        .input-main {
+          padding: 12px;
+          border-radius: 30px;
+          width: 100%;
+          height: 44px;
+          border: 1px solid #ccc;
+        }
+        .input-main:focus-visible {
+          outline: #007bff;
+          border: 1px solid #007bff;
+        }
+      
+      `}</style>
       <div style={{ width: "60%", borderRadius: "10px" }}>
         <div style={{background: "#fff", borderRadius: "30px", padding: "24px"}}>
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
@@ -128,11 +142,9 @@ export default function ApiSetup() {
                   onChange={(e) => setApiKey(e.target.value)}
                   autoComplete="off"
                   style={{
-                    border: errorMessage ? "1px solid red" : "1px solid #ccc",
-                    padding: "12px",
-                    borderRadius: "30px",
-                    width: "100%",
+                    border: errorMessage && "1px solid red"
                   }}
+                  className="input-main"
                 />
               </div>
               <div

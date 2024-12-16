@@ -159,7 +159,7 @@ export default function Orders() {
     return false;
   });
 
-  const rows = filteredOrders.map((order) => {
+  const rows = filteredOrders?.map((order) => {
     const status = order.node.displayFulfillmentStatus;
 
     // Assign background colors based on status
@@ -256,23 +256,94 @@ export default function Orders() {
   const searchContainerStyle = {
     display: "flex",
     alignItems: "center",
-    border: "1px solid #ccc",
     borderRadius: "30px",
-    padding: "5px 10px",
+    padding: "12px",
     width: "100%",
     marginBottom: "15px",
+    height: "44px"
   };
 
   const searchFieldStyle = {
     border: "none",
     outline: "none",
     flex: 1,
-    padding: "10px",
+    padding: "12px 5px",
     borderRadius: "30px",
   };
 
   return (
     <Page>
+
+      {/* Internal CSS for custom table styling */}
+        <style jsx="true">{`
+
+          .Polaris-Page {
+            max-width: unset;
+            width: 100%;
+            padding: 0 12px;
+          }
+          .Polaris-DataTable__ScrollContainer {
+            scrollbar-width: thin;
+            overflow-x: auto;
+            white-space: nowrap;
+            height: 100%;
+            cursor: grab;
+          }
+          .Polaris-DataTable__ScrollContainer:hover {
+            scrollbar-color: rgb(0, 123, 255) rgb(241, 241, 241);
+          }
+          .Polaris-DataTable__Navigation {
+            display: none !important;
+          }
+          .main-tabs {
+            display: flex;
+            margin-top: 1px;
+            flex-wrap: nowrap;
+            overflow-X: auto;
+            white-space: nowrap; 
+            gap: 5px;
+            padding-bottom: 10px;
+            scrollbar-width: thin;
+          }
+          .main-tabs:hover {
+            scrollbar-color: rgb(0, 123, 255) rgb(241, 241, 241)
+          }
+
+          .tab {
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: color 0.3s, background-color 0.3s;
+          }
+
+          .tab:hover, .tab:focus-visible {
+            background-color: #f0f0f0; 
+            border-radius: 30px;
+          }
+
+          .tab-selected {
+            background-color: #007bff;
+            color: white;
+            border-radius: 30px;
+          }
+          .tab-selected:hover {
+            background-color: #007bff;
+          }
+
+          .search-container {
+            border: 1px solid #ccc
+          }
+
+          .search-container:focus-visible, 
+          .search-container:focus-within, 
+          .search-container:focus,
+          .search-container:active {
+            outline: #007bff;
+            border: 1px solid #007bff;
+          }
+
+        `}</style>
+
       {/* <div style={{ marginBottom: 10 }}>
         <a
           href="https://richsmm.com/orders"
@@ -301,8 +372,8 @@ export default function Orders() {
       <div style={{background: "#fff", borderRadius: "30px", padding: "16px 24px"}}>
         <h1 style={{padding: "10px 0px 20px 0px", fontSize: "large", fontWeight: "bold"}}>Orders</h1>
         
-        <div style={searchContainerStyle}>
-          <Icon icon="ri:search-line" width="24" height="24" />
+        <div style={searchContainerStyle} className="search-container">
+          <Icon icon="ri:search-line" width="16" height="16" />
           <input
             type="text"
             value={searchQuery}
@@ -314,29 +385,14 @@ export default function Orders() {
         </div>
         
         {/* Custom Tabs */}
-        <div style={{ 
-          display: "flex", 
-          marginTop: 1, 
-          flexWrap: "nowrap", 
-          overflowX: "auto", 
-          whiteSpace: "nowrap", 
-          gap: "5px",
-          paddingBottom: "10px",
-          scrollbarWidth: "thin",
-          scrollbarColor: "rgb(0, 123, 255) rgb(241, 241, 241)"
-        }}>
-          {tabData.map((tab) => (
+        <div className="main-tabs">
+          {tabData?.map((tab) => (
             <div
               key={tab.id}
               onClick={() => handleTabChange(tab.id)}
+              className={`tab ${selectedTab === tab.id ? "tab-selected" : ""}`}
               style={{
-                padding: "8px 15px",
-                cursor: "pointer",
-                backgroundColor: selectedTab === tab.id ? "#007bff" : "transparent",
                 color: selectedTab === tab.id ? "white" : "#333",
-                borderRadius: selectedTab === tab.id ? "30px" : "0px",
-                border: "none",
-                transition: "color 0.3s, background-color 0.3s",
                 flexShrink: 0, // Prevent shrinking in small screens
               }}
             >
@@ -344,22 +400,6 @@ export default function Orders() {
             </div>
           ))}
         </div>
-
-        {/* Internal CSS for custom table styling */}
-        <style jsx="true">{`
-          .Polaris-DataTable__ScrollContainer {
-            scrollbar-width: thin;
-            overflow-x: auto;
-            white-space: nowrap;
-            height: 100%;
-            scrollbar-color: rgb(0, 123, 255) rgb(241, 241, 241);
-            cursor: grab;
-          }
-          .Polaris-DataTable__Navigation {
-            display: none !important;
-          }
-
-        `}</style>
 
         {/* DataTable */}
         <DataTable

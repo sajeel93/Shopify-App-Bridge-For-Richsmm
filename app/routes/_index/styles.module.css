@@ -50,12 +50,17 @@
 }
 
 .input {
-  padding: 0.8rem;
+  padding: 12px;
   border: 1px solid #ccc;
   border-radius: 30px;
   font-size: 1rem;
   width: 93%;
-  margin: 10px 0px;
+  margin: 10px 0px 20px 0px;
+  height: 18px;
+}
+.input:focus-visible {
+  outline: #007bff;
+  border: 1px solid #007bff;
 }
 
 .button {

@@ -210,12 +210,15 @@ export default function DashboardPage() {
       <style jsx>{`
         .custom-tabs {
           display: flex;
-          gap: 12px;
+          gap: 24px;
           padding: 16px 24px;
           flex-wrap: nowrap; /* Prevents wrapping */
           overflow-x: auto;
           scrollbar-width: thin;
-          scrollbar-color: rgb(0, 123, 255) rgb(241, 241, 241)
+        }
+
+        .custom-tabs:hover {
+          scrollbar-color: rgb(0, 123, 255) rgb(241, 241, 241);
         }
 
         .tab-button {
@@ -302,10 +305,11 @@ export default function DashboardPage() {
           top: 2px
         }
 
-        /* Media query for screen width 767px and below */
+        /* Media query */
         @media (max-width: 767px) {
           .custom-tabs {
             margin-bottom: 20px;
+            gap: 12px
           }
         }
       `}</style>

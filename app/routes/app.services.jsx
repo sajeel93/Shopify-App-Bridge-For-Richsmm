@@ -125,7 +125,7 @@ export default function Services() {
         {service.min} - {service.max}
       </span>, // Fifth column: Quantity (min-max)
       service.rate, // Sixth column: Rate/Cost
-      shopifyVariant.price > service.rate ? shopifyVariant.price - service.rate : "", // Seventh column: Duration
+      shopifyVariant.price > service.rate ? (shopifyVariant.price - service.rate)?.toFixed(2) : "", // Seventh column: Duration
     ];
   });
 
@@ -153,23 +153,61 @@ export default function Services() {
   const searchContainerStyle = {
     display: "flex",
     alignItems: "center",
-    border: "1px solid #ccc",
     borderRadius: "30px",
-    padding: "5px 10px",
+    padding: "12px",
     width: "100%",
     marginBottom: "15px",
+    height: "44px"
   };
 
   const searchFieldStyle = {
     border: "none",
     outline: "none",
     flex: 1,
-    padding: "10px",
+    padding: "12px 5px",
     borderRadius: "30px",
   };
 
   return (
     <Page>
+
+      {/* Internal CSS for custom table styling */}
+        <style jsx>{`
+
+          .Polaris-Page {
+            max-width: unset;
+            width: 100%;
+            padding: 0 12px;
+          }
+
+          .Polaris-DataTable__ScrollContainer {
+            scrollbar-width: thin;
+            overflow-x: auto;
+            white-space: nowrap;
+            height: 100%;
+            cursor: grab;
+          }
+          .Polaris-DataTable__ScrollContainer:hover {
+            scrollbar-color: rgb(0, 123, 255) rgb(241, 241, 241);
+          }
+          .Polaris-DataTable__Navigation {
+            display: none !important;
+          }
+
+          .search-container {
+            border: 1px solid #ccc
+          }
+
+          .search-container:focus-visible, 
+          .search-container:focus-within, 
+          .search-container:focus,
+          .search-container:active {
+            outline: #007bff;
+            border: 1px solid #007bff;
+          }
+
+        `}</style>
+
       {/* <div style={{ marginBottom: 10 }}>
         <a
           href="https://richsmm.com/services"
@@ -207,8 +245,9 @@ export default function Services() {
           style={searchFieldStyle}
         />
         </div> */}
-        <div style={searchContainerStyle}>
-          <Icon icon="ri:search-line" width="24" height="24" />
+
+        <div style={searchContainerStyle} className="search-container">
+          <Icon icon="ri:search-line" width="16" height="16" />
           <input
             type="text"
             value={searchQuery}
@@ -218,22 +257,6 @@ export default function Services() {
             autoComplete="off"
           />
         </div>
-
-        {/* Internal CSS for custom table styling */}
-        <style jsx>{`
-          .Polaris-DataTable__ScrollContainer {
-            scrollbar-width: thin;
-            overflow-x: auto;
-            white-space: nowrap;
-            height: 100%;
-            scrollbar-color: rgb(0, 123, 255) rgb(241, 241, 241);
-            cursor: grab;
-          }
-          .Polaris-DataTable__Navigation {
-            display: none !important;
-          }
-
-        `}</style>
 
         {/* DataTable for displaying services */}
         <DataTable

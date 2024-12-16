@@ -10,14 +10,6 @@ const CustomInput = ({ label, type, value, onChange, suffix }) => {
           type={type}
           value={value}
           onChange={onChange}
-          style={{
-            border: "1px solid #eee",
-            width: "100%",
-            borderRadius: "30px",
-            padding: "10px 20px",
-            outline: 'none',
-            transition: 'border 0.2s ease, box-shadow 0.2s ease',
-          }}
           className="custom-input"
         />
         {suffix && (
@@ -33,13 +25,19 @@ const CustomInput = ({ label, type, value, onChange, suffix }) => {
         )}
       </div>
       <style jsx>{`
-        .custom-input:hover {
-          border-color: #ccc; /* Change border on hover */
-        }
 
+        .custom-input {
+          border: 1px solid #ccc;
+          width: 100%;
+          border-radius: 30px;
+          padding: 12px;
+          outline: none;
+          transition: border 0.2s ease, box-shadow 0.2s ease;
+          height: 44px
+        }
         .custom-input:focus-visible {
-          border-color: #999; /* Change border on focus */
-          box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Add shadow on focus */
+          outline: #007bff;
+          border: 1px solid #007bff;
         }
 
         /* Remove arrows from number input */
@@ -124,9 +122,9 @@ export default function Settings() {
               color: "#000",
               fontSize: "12px",
               background: "#f0f0f0",
-              padding: "10px",
+              padding: "12px",
               borderRadius: "30px",
-              textAlign: "center"
+              textAlign: "left"
             }}
           >
             You can give your customers a custom quantity bonus. For example,
